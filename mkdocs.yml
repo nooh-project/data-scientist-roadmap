@@ -1,0 +1,30 @@
+site_name: Data Creator Documentation
+
+theme: 
+  name: material
+  features:
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate 
+
+nav:
+  - Home: index.md
+  - Roadmap: 
+    - Quem é?: Data Scientist/dataScientist.md
+    - Inteligência Artificial: Data Scientist/artificialInteligence.md
+    - Machine Learning: Data Scientist/machineLearning.md
+    - Generative AI: Data Scientist/generativeAI.md
+  - Appendices: appendices.md
+  - References: references.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+      toc_depth: 4
