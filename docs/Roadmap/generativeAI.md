@@ -12,7 +12,7 @@ Mesmo assim, o termo LLM ainda é usado para modelos de linguagem não considera
 
 É um modelo de texto probabilístico, computando uma distribuição em um dado vocabulário, um set de palavras, atibuindo probabilidades de uma palavra aparecer dentro daquele contexto e escopo a partir de buscas vetorizadas que fazem tarefas de **Processamento de Linguagem Natural, Natural Language Processing NLP** para os íntimos
 
-Modelos de lingugagens reconhecem tokens invés de caracteres, podendo os tokens serem uma parte de uma palavra ou ela inteira e até pontuações, com a sua frequência dependendo da complexidade do texto
+Modelos de linguagens reconhecem tokens invés de caracteres, podendo os tokens serem uma parte de uma palavra ou ela inteira e até pontuações, com a sua frequência dependendo da complexidade do texto
 
 Os modelos de arquiteturas de **Deep Learning DL** base para LLM são:
 
@@ -24,11 +24,16 @@ Os modelos de arquiteturas de **Deep Learning DL** base para LLM são:
 
 #### Encoders
 
-Designados para aprender **embeddings**, processo de transfomar uma sequência de palavras em um vetor ou sequência de vetores, sendo então uma representação numérica buscando se adequar à semântica do texto para procurar, classificar e comparar fontes de texto por similaridade semântica
+Designados para aprender **embeddings**, processo de transfomar uma sequência de palavras em um vetor ou sequência de vetores, sendo então uma representação numérica buscando se adequar à semântica do texto para procurar, classificar e comparar fontes de texto por Similaridade Semântica e/ou Numérica (sendo um, é o outro também)
+
+> A similaridade pode ser calculada por Cosine Similarity ou Dot Product Similarity, por exemplo
 
 [![Exemplos de vetores embedados](./assets/embeddings.png)](https://brains.dev/2024/token-e-embedding-conceitos-da-ia-e-llms/#:~:text=Palavra%20%22cachorro%22%20como%20Embedding%20tem,dado%20que%20s%C3%A3o%20palavras%20similares.)
 
 Estes modelos de encoder foram primeiro pensados para modelos de classificação ou regressão, mas muito do seu uso atualmente é feito para **semantic search (busca semântica)** ou **vector search in databases (busca vetorizada em bases de dados)**, servindo para, por exemplo, retornar um predaço de um documento similar ao input
+
+! importante
+Uma das maiores problemáticas é conectar o LLM com os dados de uma empresa, sendo necessário utilizar RAG, quebrando os documentos em vários chunks ou parágrafos, gerar seus respectivos embeddings e os armazenar em um Banco de Dados Vetorizado (Vector Database), automatizando o processo de similaridade e de busca
 
 <br>
 
@@ -57,6 +62,13 @@ Caso seja adicionado a palavra "pequeno" no input, a probabilidade de correspond
 É chamado de **prompt engineering (engenharia de prompt)** o ato de refinar iterativamente o modelo do input para induzir uma distribuição probabilística para uma determinada tarefa (mudar o input de novo e de novo)
 
 Até adicionar um espaço em branco pode alterar excepcionalmente a distribuição do vocabulário de palavras, devido a isso, surgiram algumas estratégias para otimizar, comprovadamente no meio acadêmico e industrial, esse processo de prompting
+
+> Reinforcement Learning from Human Feedback (RLHF) é usado para o fine-tuning das intruções inscritas para os modelos de LLM
+
+! importante
+Os vários tipos de LLMs são treinado em diferentes tipos de formato de prompt, devendo portanto o desenvolvedor se adequar para o formato do serviço desejado, como o uso de tags.
+
+<br>
 
 #### Técnicas de prompting
 
@@ -104,6 +116,8 @@ Agora, adicionamos as 7 maçãs que Maria deu a ele. Somamos 15 maçãs e 7 maç
 Portanto, João tem 22 maçãs.
 ```
 
+Existe também o Zero Shot Chain-of-Thought, onde o passo-a-passo é explicitado sem ser dado exemplos
+
 - **Least-to-most**
 
 É solicitado ao modelo resolver uma tarefa começando pelos subproblemas mais simples e, progressivamente, abordando questões mais complexas. Esse método é útil para lidar com problemas complexos que podem ser decompostos em etapas menores e mais gerenciáveis
@@ -121,6 +135,8 @@ Potássio-40 é um isótopo menor encontrado no potássio naturalmente presente.
 
 Quais são os princípios de química por trás dessa questão?
 ```
+
+<br>
 
 #### Problemas com prompting
 
@@ -209,6 +225,8 @@ Language agents: Modelos usados para decisão sequencial de cenários, como joga
 Toolformer: Strings são substituídas por chamadas a APIs para retornas certos resultados para expandir a capacidade das LLMs, um exemplo seria a IA expressar a necessidade de uso de uma calculadora e fazer a chamada a API de uma
 
 Bootstrapped reasoning: Muito bem usados em questões de planejamento, capazes de resolver tarefas altamente complexas e tarefas que não estão acostumados
+
+<br>
 
 #### Alguns outros parâmetros
 

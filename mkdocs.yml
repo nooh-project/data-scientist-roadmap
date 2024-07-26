@@ -10,10 +10,10 @@ theme:
 nav:
   - Home: index.md
   - Roadmap: 
-    - Quem é?: Data Scientist/dataScientist.md
-    - Inteligência Artificial: Data Scientist/artificialInteligence.md
-    - Machine Learning: Data Scientist/machineLearning.md
-    - Generative AI: Data Scientist/generativeAI.md
+    - Quem é?: Roadmap/dataScientist.md
+    - Inteligência Artificial: Roadmap/artificialInteligence.md
+    - Machine Learning: Roadmap/machineLearning.md
+    - Generative AI: Roadmap/generativeAI.md
   - Appendices: appendices.md
   - References: references.md
 
