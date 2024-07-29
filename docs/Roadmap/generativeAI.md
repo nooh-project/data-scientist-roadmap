@@ -20,7 +20,7 @@ Os modelos de arquiteturas de **Deep Learning DL** base para LLM são:
 
 - **Long Short-Term Memory**: Consegue reter melhor o contexto por meio de **gates**
 
-- **Transformers**: Processamento de dados em paralelo com **self-attention** para melhor entendimento do contexto com duas principais vertentes:
+- **Transformers**: Processamento de dados em paralelo com **self-attention** para melhor entendimento do contexto com duas principais vertentes, as bases de um modelo seq2seq (sequência em sequência):
 
 #### Encoders
 
@@ -34,6 +34,11 @@ Estes modelos de encoder foram primeiro pensados para modelos de classificação
 
 ! importante
 Uma das maiores problemáticas é conectar o LLM com os dados de uma empresa, sendo necessário utilizar RAG, quebrando os documentos em vários chunks ou parágrafos, gerar seus respectivos embeddings e os armazenar em um Banco de Dados Vetorizado (Vector Database), automatizando o processo de similaridade e de busca
+
+- Keyword Search ou Sparse Search: A forma mais simples de busca, comumente chamados de termos de busca, que fazem a correspondência exata aos termos que as pessoas buscam ao ir atrás de produtos, serviços ou informações gerais, podendo não retornaras informações mais relevantes para perguntas complexas
+- Semantic Search ou Dense Retrieval: Entende a semântica do texto com os embeddings
+- Reranking: Atribui um score de relevância para um set de itens
+- Hybrid Search (sparse + dense): Útil quando a relevância e especificidade de um resultado de busca são importantes, combinando a precião do Sparse com o amplo entendimento do Dense. Geralmente possui um parâmetro associado chamado alpha que determina quanto de qual tipo de busca terá mais foco
 
 <br>
 
@@ -168,13 +173,26 @@ Não devendo portanto, ser dado ao usuário acesso aos inputs do modelo diretame
 
 Somente prompting pode ser ineficiente quando os dados de treinamento existem ou quando uma adaptação de domínio é necessária
 
-- **Fine-tuning FT**: Como todas as LLMs eram treinadas em 2019, mudando todos os parâmetros de um modelo pré-treinado em um dataset rotulado e específico da tarefa, sendo muito custoso um fine-tuning completo
-
+- **Fine-tuning FT ou Vanilla**: Como todas as LLMs eram treinadas em 2019, mudando todos os parâmetros de um modelo pré-treinado em um dataset rotulado e específico da tarefa, sendo muito custoso um fine-tuning completo.
 - **Param. Efficient FT**: Isolam-se um pequeno set dos parâmetros para o treino ou adiciona-se um mesmo tanto, como o Low Rank Adaptation LORA, também com dados rotulados e específicos do problema
-
+    - **T-few FT**:  Um aditivo ao Few-shot PEFT, que insere camadas adicionais ao modelo, compondo em torno de 0,01% de seu tamanho total, isolando as atualizações de peso para as camadas transformers T-few, ele reduz significantemente o tempo de treino e o custo
 - **Soft prompting**: Adição de parâmetros por meio do prompt de "palavras" bem especializadas, sendo gerados de forma randômica e sendo iterativamente afetado pelo fine-tuning no processo de treino
-
 - **(cont.) pre-training**: Não precisa de dados rotulados e só recebe dado atrás de dado
+
+##### Configurações de Fine-tuning
+
+- Total training epochs: Número de iterações entre todo o dataset de treino
+- Batch size: Número de amostras processadas antes da atualização dos parâmetros, número do subset
+- Learing rate: Taxa de aprendizagem em que os parâmetros são atualizados a cada batch, quanto dos pesos serão ajustados a respeito da perda do gradiente
+- Early stopping thresold: O mínimo de melhora na perda necessário para prevenir o término prematuro do processo de treino
+- Early stopping patience: Relacionado ao acima, é a tolerância na estagnação da métrica de perda antes de parar o processo de treinamento, é o quanto o modelo esperará sabendo que não está sendo observada melhoras, previne o overfitting
+- Long model metrics interval in steps: Determina a frequência de logs métricos
+
+Duas métricas são usadas para saber se o seu modelo está bem:
+
+- Acurácia: Quantas predições o modelo fez corretamente na avaliação, na IA Gnerativa, pede-se para preves certas palavras nos dados dados pelo usuário
+
+- Loss (perda): Descreve o quão ruim as predições foram, devendo a perda diminuir conforme o modelo melhora
 
 <br>
 
@@ -206,11 +224,15 @@ Quando o texto gerado pela IA não está baseado nos dados de treino ou no que f
 
 Deve-se ter cuidado pois muitas das vezes estas alucinações são sucintas, podendo muito bem passarem desapercebidas. É preocupante também pois dificulta ao usuário verificar a veracidade da informação facilmente
 
+RAG pode ser comparado à colaboação entre um arquiteto e um designer de interiores, com a pesquisa dos materiais corretos, entendendo o panorama e estudando designs de arquitretura e regulamentos da construção, fazendo a fundação e o blueprint a estrutura, sendo tanto bonito e funcional e atendendo às preferências do don oda casa
+
 Sistemas RAG alucinam menos que sistemas zero-shots (claro né), podendo até serem usados em respostas a perguntas de vários documentos, checagem de fatos e diálogo
 
-Os sistemas RAG provém um mecanismo não-paramétrico, no sentido de não ser necessário ajustar o modelo em si, somente adicionais mais documentos
+Os sistemas RAG provém um mecanismo não-paramétrico, no sentido de não ser necessário ajustar o modelo em si, somente adicionar mais documentos
 
 Natural Language Inference NLI é a tarefa de determinar se a “hipótese” dada segue (entailment) ou não (contradiction) logicamente a sua “premissa”, ou se ela se mantém neutra (neutral). Basicamente, é preciso entender se a hipótese é verdadeira, enquanto a premissa é o seu único conhecimento sobre o assunto.
+
+O trabalho de Inferência é computacionalmente custoso
 
 Code models: São LLMs treinadas em cima de códigos, comentários e documentações
 
@@ -225,6 +247,25 @@ Language agents: Modelos usados para decisão sequencial de cenários, como joga
 Toolformer: Strings são substituídas por chamadas a APIs para retornas certos resultados para expandir a capacidade das LLMs, um exemplo seria a IA expressar a necessidade de uso de uma calculadora e fazer a chamada a API de uma
 
 Bootstrapped reasoning: Muito bem usados em questões de planejamento, capazes de resolver tarefas altamente complexas e tarefas que não estão acostumados
+
+#### Framework RAG
+
+- Retriever: Busca informações relevantes em um grande escopo ou database, provendo ao sistema contextos relevantes e informações atualizadas
+- Ranker: Avalia e prioriza a informação retornada pelo Retriever, garantindo respostas de alta qualidade e pertinentes ao input 
+- Generator: Gera texto baseado em linguagem humana, prezando pela coerência e fluência
+
+![RAG Pipeline](assets/RAGPipeline.png)
+
+- Rag Sequence: Considera todo o input de uma vez de forma holística, mantendo a consistênsia com resposts unificadas
+- Rag Token: Faz uma requisição mais granular, levando a uma integração mais variada e informações específicas de várias fontes
+
+![RAG Triad](assets/RAGTriad.webp) https://truera.com/ai-quality-education/generative-ai-rags/what-is-the-rag-triad/
+
+##### Vector Databases (Bancos de Dados Vetorizados)
+
+! Refazer anotação
+
+Métodos ANN são preferíveis invés de KNN em questão da velocidade, sacrificando um pouco a acurácia
 
 <br>
 
@@ -256,11 +297,13 @@ Para contornar esta problemática, existem 3 possibilidades:
 
 - Técnicas de Prompting: Bom quando o modelo já entende sobre o tópico, o usário provém demonstrações no prompt ao modelo, é limitado pelo tamanho de tokens que o modelo aguenta, gerando latência.
 - Fine-tuning: Bom quando o modelo precisa de mais intruções, o otimizando para um pequeno dataset. Recomendado quando o modelo pré-treinado não performa bem e é necessário ensiná-lo algo novo, aprendendo suas preferências, aumentando sua performance e eficiência, com menos quantidade de prompt
--RAG: Excelente para quando os dados mudam rapidamente e problemas de contexto, o modelo é capaz de pesquisar as respostas nas bases de dados da empresa ou de um lugar com informações privadas, sem precisar de trabalhos de fine-tuning
+- RAG: Excelente para quando os dados mudam rapidamente e problemas de contexto, o modelo é capaz de pesquisar as respostas nas bases de dados da empresa ou de um lugar com informações privadas, sem precisar de trabalhos de fine-tuning
 
 Cada uma das técnicas acima resolve um tipo de problema
 
-adicionar foto
+![alt text](assets/flow.png)
+
+<br>
 
 ## OCI Generative AI Service
 
@@ -268,8 +311,16 @@ Um serviço com várias formas de customização de LLMs disponíveis via API, s
 
 Usa o T-few fine-tuning para rápidas e eficientes customizações de modelos
 
-Possui também clustersde IA dedicados, recursos de computação em GPU para o fine-tuning e cargas de trabalhos de inferência, com uma rede de clusters RDMA usados para conectar as GPUs
+Possui também clusters de IA dedicados, recursos de computação em GPU para o fine-tuning e cargas de trabalhos de inferência, com uma rede de clusters RDMA usados para conectar as GPUs e compartilhar seus recursos, reduzindo os custos associados à inferência
+
+A memória da GPU é limitada, podendo dar gargalo pelo recarregamento total da memória ao trocar de modelos de LLM (apesar de ser altamente otimizado para o Deep Learning)
+
+Isso é suavizado no OCI com o compartilhamento de pesos (ou compartilhamento de parâmetros) com o processo de T-few FT, com poucas variações entre os modelos, sendo eficientemente dados deploy nas mesmas GPUs em um cluster de IA, pois as partes comuns entre os modelos são carregados somente uma vez na memória
 
 As GPUs de um trabalho são isoladas das de outros trabalhos do usuário
 
 Para o seu código no OCI funcionar, deve-se finalizar a manutenção do arquivo de manutenção adquirindo uma chave de API da Oracle
+
+![flow de inferência no OCI](assets/inferenceFlow.png)
+
+![flow de hosting no OCI](assets/hostingFlow.png)
