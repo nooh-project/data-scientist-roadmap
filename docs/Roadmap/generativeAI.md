@@ -248,6 +248,20 @@ Bootstrapped reasoning: Muito bem usados em questões de planejamento, capazes d
 
 <br>
 
+#### Custos
+
+São muito caros de serem treinados com seus parâmetros, em torno de 1 milhão de dólares por 10 bilhões de parâmetros, além de precisarem mais ainda de tokens, como por exemplo o modelo Meta Llama-2 7B, treinado em 2 trilhões de tokens, necessitando de um amplo entendimento da performance do modelo
+
+Para contornar esta problemática, existem 3 possibilidades:
+
+- Técnicas de Prompting: Bom quando o modelo já entende sobre o tópico, o usário provém demonstrações no prompt ao modelo, é limitado pelo tamanho de tokens que o modelo aguenta, gerando latência.
+- Fine-tuning: Bom quando o modelo precisa de mais intruções, o otimizando para um pequeno dataset. Recomendado quando o modelo pré-treinado não performa bem e é necessário ensiná-lo algo novo, aprendendo suas preferências, aumentando sua performance e eficiência, com menos quantidade de prompt
+-RAG: Excelente para quando os dados mudam rapidamente e problemas de contexto, o modelo é capaz de pesquisar as respostas nas bases de dados da empresa ou de um lugar com informações privadas, sem precisar de trabalhos de fine-tuning
+
+Cada uma das técnicas acima resolve um tipo de problema
+
+adicionar foto
+
 ## OCI Generative AI Service
 
 Um serviço com várias formas de customização de LLMs disponíveis via API, sem a necessidade de gerenciar nenhuma infraestrutura
